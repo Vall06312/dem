@@ -1,0 +1,148 @@
+﻿<Window x:Class="dem.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ООО «Обувь»" Height="720" Width="1300" MinHeight="560" MinWidth="900"
+        WindowStartupLocation="CenterScreen" FontFamily="Times New Roman" FontSize="15"
+        Background="White" Icon="Images/Icon.ico">
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Background="#7FFF00" Padding="10">
+            <DockPanel>
+                <Image Source="Images/Icon.png" Height="46" Stretch="Uniform" DockPanel.Dock="Left"/>
+                <Button DockPanel.Dock="Right" Content="Выход" Click="Exit"/>
+                <Border DockPanel.Dock="Right" Background="White" CornerRadius="12" Padding="12,4" Margin="8,0" VerticalAlignment="Center">
+                    <TextBlock x:Name="tbUser" Foreground="#1E3A00"/>
+                </Border>
+                <TextBlock Text="ООО «Обувь»" FontSize="22" FontWeight="Bold" Foreground="#1E3A00" VerticalAlignment="Center" Margin="12,0"/>
+            </DockPanel>
+        </Border>
+
+        <WrapPanel x:Name="panelFilters" DockPanel.Dock="Top" Margin="10,8,10,0">
+            <TextBlock Text="Поиск" Height="20"/>
+            <TextBox x:Name="tbSearch" Width="200" Height="20" TextChanged="Filter"/>
+            <StackPanel Margin="0,0,8,6">
+                <TextBlock Text="Сортировка"/>
+                <ComboBox x:Name="cbSort" Width="150" SelectionChanged="Filter">
+                    <ComboBoxItem>Нет</ComboBoxItem>
+                    <ComboBoxItem>Цена ↑</ComboBoxItem>
+                    <ComboBoxItem>Цена ↓</ComboBoxItem>
+                    <ComboBoxItem>Скидка ↑</ComboBoxItem>
+                    <ComboBoxItem>Скидка ↓</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Margin="0,0,8,6">
+                <TextBlock Text="Поставщик"/>
+                <ComboBox x:Name="cbSup" Width="150" SelectionChanged="Filter"/>
+            </StackPanel>
+            <StackPanel Margin="0,0,8,6">
+                <TextBlock Text="Скидка"/>
+                <ComboBox x:Name="cbSk" Width="120" SelectionChanged="Filter">
+                    <ComboBoxItem>Все</ComboBoxItem>
+                    <ComboBoxItem>0–9%</ComboBoxItem>
+                    <ComboBoxItem>10–14%</ComboBoxItem>
+                    <ComboBoxItem>15%+</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+        </WrapPanel>
+
+        <WrapPanel x:Name="panelButtons" DockPanel.Dock="Top" Margin="10,0">
+            <Button x:Name="btnAdd" Content="Добавить" Background="#00FA9A" FontWeight="Bold" Click="Add"/>
+            <Button x:Name="btnEdit" Content="Редактировать" Click="Edit"/>
+            <Button x:Name="btnDel" Content="Удалить" Foreground="#C62828" Click="Del"/>
+            <Button x:Name="btnOrders" Content="Заказы" Click="Toggle"/>
+        </WrapPanel>
+
+        <WrapPanel x:Name="panelProduct" DockPanel.Dock="Top" Margin="10,0" Visibility="Collapsed">
+            <TextBox x:Name="pArt" Width="90"/>
+            <TextBox x:Name="pName" Width="150"/>
+            <TextBox x:Name="pUnit" Width="60" Text="шт."/>
+            <TextBox x:Name="pPrice" Width="80"/>
+            <TextBox x:Name="pSkid" Width="70" Text="0"/>
+            <TextBox x:Name="pMan" Width="120"/>
+            <TextBox x:Name="pSup" Width="120"/>
+            <TextBox x:Name="pCat" Width="120"/>
+            <TextBox x:Name="pQty" Width="60" Text="0"/>
+            <TextBox x:Name="pDesc" Width="200"/>
+            <StackPanel Margin="0,0,8,6">
+                <TextBlock Text="Фото"/>
+                <ComboBox x:Name="pFoto" Width="110"/>
+            </StackPanel>
+            <Button Content="Сохранить" Background="#00FA9A" FontWeight="Bold" VerticalAlignment="Bottom" Click="SaveP"/>
+            <Button Content="Отмена" VerticalAlignment="Bottom" Click="Cancel"/>
+        </WrapPanel>
+
+        <WrapPanel x:Name="panelOrder" DockPanel.Dock="Top" Margin="10,0" Visibility="Collapsed">
+            <TextBox x:Name="oNum" Width="80"/>
+            <TextBox x:Name="oComp" Width="200"/>
+            <TextBox x:Name="oD1"  Width="100"/>
+            <TextBox x:Name="oD2" Width="100"/>
+            <StackPanel Margin="0,0,8,6">
+                <TextBlock Text="Пункт выдачи"/>
+                <ComboBox x:Name="oPoint" Width="230"/>
+            </StackPanel>
+            <TextBox x:Name="oClient" Width="160"/>
+            <TextBox x:Name="oCode" Width="70"/>
+            <StackPanel Margin="0,0,8,6">
+                <TextBlock Text="Статус"/>
+                <ComboBox x:Name="oStatus" Width="110" IsEditable="True"/>
+            </StackPanel>
+            <Button Content="Сохранить" Background="#00FA9A" FontWeight="Bold" VerticalAlignment="Bottom" Click="SaveO"/>
+            <Button Content="Отмена" VerticalAlignment="Bottom" Click="Cancel"/>
+        </WrapPanel>
+
+        <Border DockPanel.Dock="Bottom" Background="#7FFF00" Padding="10,5">
+            <TextBlock x:Name="tbStatus" Foreground="#1E3A00"/>
+        </Border>
+
+        <Grid Margin="10">
+            <DataGrid x:Name="gridP" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                      SelectionMode="Single" SelectedValuePath="Id" RowHeight="90" Background="White"
+                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#E0E0E0" BorderBrush="#BDBDBD">
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                        <Setter Property="Background" Value="{Binding Fon}"/>
+                        <Setter Property="Foreground" Value="{Binding Tekst}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#00FA9A"/>
+                                <Setter Property="Foreground" Value="#05341F"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Фото" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding Foto}" Stretch="Uniform" Margin="3"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Артикул" Binding="{Binding artikul}"/>
+                    <DataGridTextColumn Header="Наименование" Binding="{Binding Name_Tovara}" Width="130"/>
+                    <DataGridTextColumn Header="Категория" Binding="{Binding kategorii_tovara}"/>
+                    <DataGridTextColumn Header="Производитель" Binding="{Binding proisvoditel}"/>
+                    <DataGridTextColumn Header="Поставщик" Binding="{Binding postavshik}"/>
+                    <DataGridTextColumn Header="Цена" Binding="{Binding price, StringFormat={}{0:N2} ₽}"/>
+                    <DataGridTextColumn Header="Скидка %" Binding="{Binding skidka}"/>
+                    <DataGridTextColumn Header="Цена со скидкой" Binding="{Binding Itog, StringFormat={}{0:N2} ₽}"/>
+                    <DataGridTextColumn Header="Кол-во" Binding="{Binding qty}"/>
+                    <DataGridTextColumn Header="Описание" Binding="{Binding opisanie}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <DataGrid x:Name="gridO" Visibility="Collapsed" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                      SelectionMode="Single" SelectedValuePath="Id" RowHeight="32" Background="White"
+                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#E0E0E0" BorderBrush="#BDBDBD">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="№" Binding="{Binding Nomber_zakaz}"/>
+                    <DataGridTextColumn Header="Состав заказа" Binding="{Binding Artikyl_zakaza}" Width="150"/>
+                    <DataGridTextColumn Header="Дата заказа" Binding="{Binding d1}"/>
+                    <DataGridTextColumn Header="Дата доставки" Binding="{Binding d2}"/>
+                    <DataGridTextColumn Header="Пункт выдачи" Binding="{Binding point}" Width="240"/>
+                    <DataGridTextColumn Header="Клиент" Binding="{Binding FIO_klienta}"/>
+                    <DataGridTextColumn Header="Код" Binding="{Binding Code}"/>
+                    <DataGridTextColumn Header="Статус" Binding="{Binding Status}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </DockPanel>
+</Window>
